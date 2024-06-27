@@ -1,0 +1,49 @@
+$paginationHeight: 64px;
+$wrapperHeight: calc(100vh - 260px);
+$tableHeight: calc($wrapperHeight - $paginationHeight);
+
+.wrapper {
+  margin-top: 10px;
+}
+
+.refresh {
+  padding-left: 10px;
+}
+
+.table {
+  :global(.ant-spin-nested-loading) {
+    height: 100%;
+
+    :global(.ant-spin-container) {
+      height: 100%;
+
+      :global(.ant-table) {
+        height: 100%;
+
+        :global(.ant-table-container) {
+          height: 100%;
+
+          :global(.ant-table-body) {
+            height: 100%;
+            border-bottom: 1px solid var(--color-border);
+          }
+        }
+      }
+    }
+  }
+
+  :global(.react-resizable) {
+    position: relative;
+    background-clip: padding-box;
+  }
+
+  :global(.react-resizable-handle) {
+    position: absolute;
+    width: 10px;
+    height: 100%;
+    bottom: 0;
+    right: -5px;
+    cursor: col-resize;
+    z-index: 1;
+  }
+}

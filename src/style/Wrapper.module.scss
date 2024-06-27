@@ -1,0 +1,9 @@
+.wrapper {
+	height: 100%;
+
+	&__table {
+		@extend .wrapper;
+
+		padding: 40px 20px;
+	};
+};

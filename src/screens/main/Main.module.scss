@@ -1,0 +1,17 @@
+.wrapper {
+  height: 100vh;
+};
+
+.button {
+  position: absolute;
+  top: 70px;
+  left: 240px;
+  font-weight: bold;
+  box-shadow: 0px 4px 4px 0px #00000040;
+  transition: 0.3s cubic-bezier(0.2, 0, 0, 1) 0s;
+
+  &__collapsed {
+    @extend .button;
+    left: 20px;
+   };
+};
