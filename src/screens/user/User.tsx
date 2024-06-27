@@ -4,17 +4,21 @@ import { selectLoading, selectTotal, selectUsers } from 'store/user/selector';
 import { userColumnHeaders } from 'utils/columns';
 import { GetDataArgs } from 'types/types';
 import Table from 'components/table/Table';
+import { useCallback } from 'react';
 
-const UserTable = () => {
+const User = () => {
   const usersLoading = useAppSelector(selectLoading);
   const usersTotal = useAppSelector(selectTotal);
   const userData = useAppSelector(selectUsers);
 
   const dispatch = useAppDispatch();
 
-  const getUserData = ({ sorter, page, pageSize }: GetDataArgs) => {
-    dispatch(getUsers({ sorter, page, pageSize }));
-  };
+  const getUserData = useCallback(
+    ({ sorter, page, pageSize }: GetDataArgs) => {
+      dispatch(getUsers({ sorter, page, pageSize }));
+    },
+    [dispatch],
+  );
 
   return (
     <Table
@@ -27,4 +31,4 @@ const UserTable = () => {
   );
 };
 
-export default UserTable;
+export default User;

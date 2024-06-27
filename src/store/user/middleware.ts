@@ -6,7 +6,7 @@ import { IUserItem } from 'types/user.type';
 
 //data
 import { users } from 'data/user';
-import { GetDataArgs, ISorter, Return } from 'types/types';
+import { GetDataArgs, Return } from 'types/types';
 import { getPageData, sortData } from 'utils/transformData';
 
 export const getUsers = createAsyncThunk<Return<IUserItem>, GetDataArgs>(
@@ -15,7 +15,7 @@ export const getUsers = createAsyncThunk<Return<IUserItem>, GetDataArgs>(
     const { sorter, pageSize, page } = options;
     const total = users.length;
     const promise: Promise<Return<IUserItem>> = new Promise((resolve) => {
-      const sortedUsers = sortData(users, sorter as ISorter);
+      const sortedUsers = sortData<IUserItem>(users, sorter);
       const paginatedData = getPageData(sortedUsers, page, pageSize);
 
       setTimeout(() => {

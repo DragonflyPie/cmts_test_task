@@ -1,27 +1,30 @@
 //types
 import type { ResizeCallbackData } from 'react-resizable';
-import { ColumnsType } from 'antd/es/table';
+import { ColumnsType, TableRef } from 'antd/es/table';
 import { ColumnHeader, GetDataArgs } from 'types/types';
+import { IUserItem } from 'types/user.type';
+import { IArticleItem } from 'types/article.type';
 
 //dependencies
-import React, { LegacyRef, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Table as AntdTable, Button, Space, Tooltip } from 'antd';
 
 //components
 import Pagination from 'components/pagination/Pagination';
+import Title from 'components/title/Title';
+import ResizableTitle from './ResizableTitle';
+
+//hooks
+import useTable from './useTable';
+import useSort from './useSort';
+import usePagination from './usePageination';
+import { useCalculateTableHeight } from './useCalculateTableHeight';
 
 //constants
 import { BUTTON_SIZE, BUTTON_TYPE, TABLE_MIN_HEIGHT } from 'utils/constants';
 
 //styles
 import style from './Table.module.scss';
-import useTable from './useTable';
-import Title from 'components/title/Title';
-import ResizableTitle from './ResizableTitle';
-import useSort from './useSort';
-import usePagination from './usePageination';
-import { IUserItem } from 'types/user.type';
-import { IArticleItem } from 'types/article.type';
 import { RedoOutlined } from '@ant-design/icons';
 
 interface TableProps {
@@ -34,14 +37,17 @@ interface TableProps {
 
 const Table = ({ loading, initColumns, total, data, getData }: TableProps) => {
   const [columns, setColumns] = useState<ColumnHeader[]>([]);
-  const [height, setHeight] = useState('0px');
   const { page, pageSize, onChangePage, onChangePageSize } = usePagination();
   const { fixeds, hiddens, onChangeFixeds, onChangeHiddens } = useTable();
   const { sorter, onChangeSorter } = useSort();
 
+  const tableRef = useRef<TableRef>(null);
+  const height = useCalculateTableHeight(tableRef);
+
   useEffect(() => {
+    console.log('trigger');
     getData({ sorter, page, pageSize });
-  }, [page, pageSize, sorter]);
+  }, [page, pageSize, sorter, getData]);
 
   const refresh = () => {
     onChangeFixeds([]);
@@ -89,23 +95,6 @@ const Table = ({ loading, initColumns, total, data, getData }: TableProps) => {
     };
   });
 
-  const calculateTableHeight = () => {
-    const table = document.querySelector('.ant-table')?.getBoundingClientRect();
-    const height = document.body.offsetHeight;
-
-    if (table !== undefined) {
-      const tableHeight = height - table?.top - 120;
-
-      return tableHeight < TABLE_MIN_HEIGHT ? TABLE_MIN_HEIGHT + 'px' : tableHeight + 'px';
-    } else {
-      return TABLE_MIN_HEIGHT + 'px';
-    }
-  };
-
-  useEffect(() => {
-    setHeight(calculateTableHeight);
-  }, []);
-
   useEffect(() => {
     setColumns(initColumns);
   }, [initColumns]);
@@ -119,6 +108,7 @@ const Table = ({ loading, initColumns, total, data, getData }: TableProps) => {
       </Space>
       <div className={style.wrapper}>
         <AntdTable
+          ref={tableRef}
           bordered
           showHeader
           rowKey="id"
